@@ -1,0 +1,26 @@
+h3 {
+  font-family: "Times New Roman", Times, serif;
+}
+
+h4{
+  font-family: arial, Helvetica, sans-serif
+}
+
+p {
+  font-size: 130%;
+  line-height: 1.5;
+}
+
+/* univisted link*/
+a:link {
+  color: red;
+}
+
+/* hover over link*/
+a:hover {
+  color: purple;
+}
+
+img {
+  border-radius: 8px;
+}
