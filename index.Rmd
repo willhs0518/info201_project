@@ -1,0 +1,161 @@
+---
+title: "Midpoint Deliverable"
+author: "Emily Yu, William Huang, Mekides Demile, Quynh Doan"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+# switch to option of echo = FALSE for the entire file, so
+# no codes are shown in the report
+knitr::opts_chunk$set(echo = FALSE)
+source("scripts/Summary.R")
+source("scripts/Table.R")
+source("scripts/Chart 1.R")
+source("scripts/Chart 2.R")
+source("scripts/Chart 3.R")
+# library
+library(knitr)
+# read in data
+regular_season_df <- read.csv(
+  "./data/2018-2019-NBA-Player-Stats-NBAstuffer-regularseasons.csv",
+  stringsAsFactors = FALSE)
+playoff_df <- read.csv(
+  "./data/2018-2019-NBA-Player-Stats-NBAstuffer-playoffs.csv",
+  stringsAsFactors = FALSE)
+```
+
+## Introduction
+Ａ lot of sports were put on hold in light of health safety concerns during the
+COVID period. We are interested in using the data of the latest NBA game season
+to look ahead and evaluate each team and each individual player’s performance.
+We will be using the NBA player stats dataset for the 2018-2019 game season as 
+the 2019-2020 season was suspended due to the pandemic.
+[This](https://www.nbastuffer.com/2018-2019-nba-player-stats/) is the link to
+the website of the used datasets.
+
+## Summary Information
+```{r summary, message=FALSE, warning=FALSE}
+# render the summary information which include 5 values
+# function returning values that summarize the dataset
+info <- get_summary_info(regular_season_df)
+```
+
+There were **`r info$player_num`** players and **`r info$team_num`** teams
+participated in the latest 2018-2019 NBA season. Several players' performaces
+were particularly outstanding, including **`r info$best_player`** who had
+played only `r info$best_player_game_played` games in this season and had the
+highest VI value, a measure of player's ability to produce points, assists, and
+rebounds, among all players, and **`r info$highest_point_player`** who got the
+highest points per game in this season. Audiences and fans are specially looking
+forward to these talented players' performances in the future.
+
+
+## Summary Table
+To better evaluate each individual player's performance, it is important the
+understand the difference between each position in the courts. Each position
+focused on different strategies and contributes differently to the game and
+the earned scores.
+
+```{r kable_table, message=FALSE, warning=FALSE}
+# rendering table
+# function returning aggregated information of each position's performance data
+position_differences <- position_difference(regular_season_df)
+# well-formatted column names are handled in the function
+kable(position_differences, caption = "Average Performance Data by Position")
+```
+
+### Important Insights from the Table
+The aggregated table shows the summarized information grouped by the players'
+positions in the courts. The table is sorted so that it is showing the position
+with the highest average scoring to the position with the lowest. This table reveals
+that each position contributes to the game in different ways as some positions focus
+on shooting to get points and some positions focus on defending. These values do
+not define the importance of a particular position, instead, the values help us
+understand the different nature of each position.
+
+## Bar Chart
+VI, Versatility Index, is a metric that measures a player’s ability to produce in
+points, assists, and rebounds. To better evaluate each team's ability and the
+chance of winning in the future seasons, a bar chart showing the average VI values
+of all players in each team can be really helpful. The visualization can help us
+understand each team's ability as well as finding out the team with the highest
+chance of winning in the future.
+
+```{r bar_chart, message=FALSE, warning=FALSE}
+# rendering the bar chart
+# function returning a visualization of each team's average player VI value
+team_VI_value <- get_bar_chart(regular_season_df)
+plot(team_VI_value)
+```
+
+### Important Insights from the Bar Chart
+According to the bar chart grouped by the team, the team with the highest average
+VI values is BOS, meaning that it has a higher chance of winning in the future
+based on the performance of this latest game season. It is obvious that there are
+factors that may affect the team's performance in future seasons, such as 
+improvement and injury, so we are just trying to make the best prediction and find
+the team with the highest chance of winning in the future entirely based on the
+existed data. There can be star players as well as rookies in each team, so we
+define each team's ability by using the average of players' VI values.
+
+## Scatter plot
+To better evaluate each team's performance, a scatter plot with two different
+colors representing the VI values in the regular season and the playoffs can be
+useful. This visualization can help us find out if there are teams trying to
+preserve their scoring, save their strength, or perhaps let rookies have more
+experiences of participating in the real NBA games while doing the playoffs.
+
+```{r scatter_plot, message=FALSE, warning=FALSE}
+# rendering scatterplot
+# function returning visualization of each team's player VI which is colored
+# to represent different type of games, the regular season versus playoffs
+regular_vs_playoff <- get_scatter_plot(regular_season_df, playoff_df)
+plot(regular_vs_playoff)
+```
+
+### Important Insights from the Scatter Plot
+Based on the scatter plot, we can notice that for teams that participate in both
+regular season and the playoffs have similar VI value distributions, meaning that
+there are no teams with obvious intent to save their strength while doing the 
+playoffs. This is a little bit different from our initial expectation, but the
+scatter plot reveals that all teams try their best in both types of games and our
+assumption is wrong.
+
+## Pie Chart
+To understand more about players in each team, a grouped pie chart can help us
+understand the players' experience distribution of each team. We define a player's
+experience by using the value of GP, games played. We can understand the
+distribution of players who participate in numerous games and the percentage of
+players who are new players with less experiences in each team, so that each team's
+performance can be better evaluated.
+
+```{r pie_chart, message=FALSE, warning=FALSE}
+# rendering the pie chart
+# function returning the distribution of players's participation percentage,
+# the players' GP over the total number of games in the season, of a selected team
+
+# we are displaying two teams' player participation percentage distribution as
+# examples, the team with the most number of players participated in more than 90%
+# games and the team with the most number of players participated in less than 30%
+# games of the season (displaying all team's chart will be too many for the report
+# as we have 30 teams participated in this season)
+san_player_GP_distribution <- get_pie_chart(regular_season_df, "San")
+phi_player_GP_distribution <- get_pie_chart(regular_season_df, "Phi")
+plot(san_player_GP_distribution)
+plot(phi_player_GP_distribution)
+```
+
+### Important Insights from the Pie Chart
+The first chart is for San Antonio Spurs, the team with the most number of players
+participated in more than 90% games in the league. San finished the season with 7th
+place at western conference. The second chart is for Philadelphia 76ers, the team
+with the most number of players participated in no more than 30% games of the
+season in the league, who finished the season with 3rd place at eastern conference.
+In total, there were 82 games in the season. The pie chart shows the distribution
+of players' participation rate which is defined as the player's GP over 82, the
+total number of games in this season, of a selected team. It is important to
+understand that the participation rate distribution does not necessaily define the
+team's ability. A team with multiple players who participated in most of the games
+means the team has more experienced players, but the team can still lose sometimes,
+and similarly, the team with multiple players who only participated in small number
+of games in the season can win sometimes as well. 
